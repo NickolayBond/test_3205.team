@@ -1,0 +1,200 @@
+.job-list {
+  &-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+
+    h2 {
+      font-size: 19px;
+      font-weight: 700;
+    }
+  }
+
+  &-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .job-count {
+    background: var(--primary-light);
+    color: var(--primary);
+    padding: 3px 11px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .connection-status {
+    font-size: 12px;
+    line-height: 1;
+
+    &.online {
+      color: var(--success);
+      animation: pulse-dot 1.6s ease-in-out infinite;
+    }
+
+    &.offline {
+      color: var(--gray-400);
+    }
+  }
+}
+
+.job-list-items {
+  max-height: 520px;
+  overflow-y: auto;
+  margin: 0 -6px;
+  padding: 0 6px;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--gray-300);
+    border-radius: 3px;
+  }
+}
+
+.job-item {
+  position: relative;
+  padding: 14px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  margin-bottom: 10px;
+  background: white;
+  animation: fadeInUp 0.3s ease;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 14px;
+    bottom: 14px;
+    width: 3px;
+    border-radius: 3px;
+    background: transparent;
+    transition: var(--transition);
+  }
+
+  &:hover {
+    border-color: var(--gray-300);
+    transform: translateX(2px);
+    box-shadow: var(--shadow-sm);
+  }
+
+  &.active {
+    background: var(--primary-light);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+
+    &::before {
+      background: var(--primary);
+    }
+  }
+
+  &-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+
+    .job-id {
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--gray-700);
+      font-family: 'JetBrains Mono', monospace;
+    }
+  }
+
+  &-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--gray-600);
+    margin-bottom: 8px;
+
+    .job-stats {
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      gap: 10px;
+
+      .stat {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        gap: 5px;
+      }
+    }
+
+    .stat-ok {
+      color: var(--success);
+      font-weight: 600;
+    }
+
+    .stat-err {
+      color: var(--danger);
+      font-weight: 600;
+    }
+  }
+
+  &-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--gray-400);
+
+    .job-progress {
+      color: var(--primary);
+      font-weight: 600;
+    }
+  }
+}
+
+.empty-jobs {
+  text-align: center;
+  padding: 40px 0;
+
+  p {
+    color: var(--gray-600);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  span {
+    font-size: 13px;
+    color: var(--gray-400);
+  }
+}
+
+.loading-skeleton {
+  .skeleton-item {
+    height: 84px;
+    background: linear-gradient(90deg,
+        var(--gray-100) 25%,
+        var(--gray-200) 50%,
+        var(--gray-100) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: var(--radius-sm);
+    margin-bottom: 10px;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}

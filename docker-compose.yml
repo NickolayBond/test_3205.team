@@ -6,7 +6,7 @@ services:
       context: ./packages/backend
       dockerfile: Dockerfile
       target: ${BACKEND_TARGET:-development}
-    container_name: test_3205.team
+    container_name: test_3205.team-backend
     ports:
       - "3000:3000"
     environment:
@@ -14,26 +14,62 @@ services:
       - PORT=3000
       - STORAGE_TYPE=${STORAGE_TYPE:-memory}
       - MAX_CONCURRENT_REQUESTS=5
-      - LOG_LEVEL=${LOG_LEVEL:-debug}
+      - CORS_ORIGIN=http://localhost:5173,http://localhost:80
     volumes:
-      - /app/node_modules 
+      - /app/node_modules
     develop:
       watch:
+        - action: rebuild
+          path: ./packages/backend/package.json
         - action: sync
           path: ./packages/backend
           target: /app
           ignore:
             - node_modules/
+            - dist/
     networks:
-      - url-checker-network
+      - test_3205.team-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
       interval: 30s
       timeout: 5s
       retries: 3
-      start_period: 10s
+
+  frontend:
+    build:
+      context: ./packages/frontend
+      dockerfile: Dockerfile
+      target: ${FRONTEND_TARGET:-development}
+    container_name: test_3205.team-frontend
+    ports:
+      - "${FRONTEND_PORT:-5173}:${FRONTEND_CONTAINER_PORT:-5173}"
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - VITE_API_URL=http://localhost:3000
+    volumes:
+      - ./packages/frontend/src:/app/src
+      - ./packages/frontend/public:/app/public
+      - ./packages/frontend/index.html:/app/index.html
+      - ./packages/frontend/vite.config.ts:/app/vite.config.ts
+      - /app/node_modules
+    develop:
+      watch:
+        - action: rebuild
+          path: ./packages/frontend/package.json
+        - action: sync
+          path: ./packages/frontend/src
+          target: /app/src
+        - action: sync
+          path: ./packages/frontend/public
+          target: /app/public
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - test_3205.team-network
+    restart: unless-stopped
 
 networks:
-  url-checker-network:
+  test_3205.team-network:
     driver: bridge

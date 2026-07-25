@@ -3,20 +3,9 @@
   "version": "1.0.0",
   "description": "Сервис асинхронной проверки списка URL",
   "scripts": {
-    "docker:dev": "docker-compose up",
-    "docker:dev:build": "docker-compose up --build",
-    "docker:dev:bg": "docker-compose up -d",
-    "docker:prod": "docker-compose -f docker-compose.prod.yml up",
-    "docker:prod:build": "docker-compose -f docker-compose.prod.yml up --build",
-    "docker:prod:bg": "docker-compose -f docker-compose.prod.yml up -d",
-    "docker:down": "docker-compose down",
-    "docker:prod:down": "docker-compose -f docker-compose.prod.yml down",
-    "docker:clean": "docker-compose down -v && docker system prune -f",
-    "docker:prod:clean": "docker-compose -f docker-compose.prod.yml down -v && docker system prune -f",
-    "docker:logs": "docker-compose logs -f",
-    "docker:prod:logs": "docker-compose -f docker-compose.prod.yml logs -f",
-    "docker:rebuild": "docker-compose up --build --force-recreate",
-    "docker:prod:rebuild": "docker-compose -f docker-compose.prod.yml up --build --force-recreate"
+    "docker:dev": "docker compose --env-file .env.dev up --build",
+    "docker:prod": "docker compose --env-file .env.prod up --build -d",
+    "docker:clean": "docker compose down -v --rmi all --remove-orphans"
   },
   "author": "",
   "license": "ISC"

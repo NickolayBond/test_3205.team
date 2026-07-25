@@ -9,11 +9,15 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api');
 
-  // CORS
+  const origins = configService.get<string[]>('cors.origin') || [];
+
   app.enableCors({
-    origin: configService.get('cors.origin') || '*',
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    origin: origins,
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
     credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+    exposedHeaders: ['Content-Length', 'X-Request-Id'],
+    maxAge: 86400, // 24 часа
   });
 
   // Валидация
@@ -25,11 +29,12 @@ async function bootstrap() {
     }),
   );
 
-  const port = configService.get('port') || 3000;
+  const port = configService.get<number>('port') || 3000;
   await app.listen(port);
 
-  console.log(`Приложение запущено на: http://localhost:${port}`);
+  console.log(`Application started on: http://localhost:${port}`);
   console.log(`Health check: http://localhost:${port}/api/health`);
+  console.log(`CORS enabled for: ${origins.join(', ')}`);
 }
 
 bootstrap();
